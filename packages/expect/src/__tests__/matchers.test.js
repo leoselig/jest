@@ -1571,6 +1571,11 @@ describe('toMatchObject()', () => {
     });
   });
 
+  const circularObject = {};
+  circularObject.self = circularObject;
+  const transitiveCircularObject = {};
+  transitiveCircularObject.up = {down: transitiveCircularObject};
+
   [
     [{a: 'b', c: 'd'}, {e: 'b'}],
     [{a: 'b', c: 'd'}, {a: 'b!', c: 'd'}],
@@ -1597,6 +1602,8 @@ describe('toMatchObject()', () => {
     [[1, 2, 3], [1, 2, 2]],
     [new Error('foo'), new Error('bar')],
     [Object.assign(Object.create(null), {a: 'b'}), {c: 'd'}],
+    [circularObject, circularObject],
+    [transitiveCircularObject, transitiveCircularObject],
   ].forEach(([n1, n2]) => {
     it(`{pass: false} expect(${stringify(n1)}).toMatchObject(${stringify(
       n2,
